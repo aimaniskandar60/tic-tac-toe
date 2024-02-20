@@ -1,3 +1,5 @@
+import sys 
+sys.dont_write_bytecode = True
 import time
 from player import HumanPlayer, ComputerPlayer
 
@@ -25,10 +27,7 @@ class TicTacToe:
     def empty_squares(self) -> bool:
         return ' ' in self.board
     
-    def num_empty_squares(self) -> int:
-        return self.board.count(' ')
-    
-    def make_move(self, square: int, letter: str) -> bool:
+    def valid_move(self, square: int, letter: str) -> bool:
         if self.board[square] == ' ':
             self.board[square] = letter
             if self.winner(square, letter):
@@ -67,19 +66,17 @@ def play(game: TicTacToe, x_player: HumanPlayer, o_player: ComputerPlayer, print
 
     letter = 'X' # starting letter
 
+    # While there are still empty squares on the board.
     while game.empty_squares():
-       
-        if letter == 'O':
-            square = o_player.get_move(game)
-        else:
-            square = x_player.get_move(game)
+        square = x_player.get_move(game) if letter == 'X' else o_player.get_move(game)
 
-        if game.make_move(square, letter):
+        if game.valid_move(square, letter):
             if print_game:
                 print(f"{letter} makes a move to square {square}")
                 game.print_board()
                 print("")
 
+            # End game if there's a winner.
             if game.current_winner:
                 if print_game:
                     print(f"{letter} wins.")
